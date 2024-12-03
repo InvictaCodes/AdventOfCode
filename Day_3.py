@@ -4,7 +4,6 @@ import re
 
 
 def get_output(data):
-    string = re.compile('mul([\d]{1,3},[\d]{1-3})')
     matches = re.findall("mul\([0-9]{1,3},[0-9]{1,3}\)|do\(\)|don't\(\)", data)
 
     while "don't()" in matches:
