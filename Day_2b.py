@@ -17,16 +17,18 @@ def apply_dampener(line):
     return False
 
 
-def get_output(data):
-    safe_reports = 0
+def count_safe_reports(data):
+    safe_reports, safe_with_dampener = 0, 0
     lines = [line.split() for line in data.split('\n')]
     for line in lines:
         result = is_it_safe(line)
+        safe_reports += result
         if not result:
             result = apply_dampener(line)
-        safe_reports += result
+        safe_with_dampener += result
 
     print(f'There are {safe_reports} safe reports.')
+    print(f'With the dampener there are {safe_with_dampener} safe reports')
 
 
-get_output(inputs.day_2_data)
+count_safe_reports(inputs.day_2_data)
