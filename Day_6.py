@@ -1,6 +1,8 @@
 import inputs
 import numpy as np
 
+# Warning this takes just over 3 minutes to run on my no great but not too crap laptop.
+
 
 def check_guard_in_bounds(position, bounds):
     if 0 <= position[0] <= bounds[0]-1 and 0 <= position[1] <= bounds[1]-1:
@@ -10,7 +12,7 @@ def check_guard_in_bounds(position, bounds):
 
 def check_for_loops(route): # If last 2 moves have happened in same order before then same place, same direction so must be a loop.
     last_moves = [route[-2], route[-1]]
-    for move in range(1, len(route)-3):  # don't want to check the last two as always true
+    for move in range(len(route)-3):  # don't want to check the last two as always true
         if route[move:move + 2] == last_moves:
             return True
     return False
@@ -54,7 +56,7 @@ def run_guard(guard_route, direction, obstacles, bounds):
         next_position, direction = move_guard(guard_route[-1], direction, obstacles)
         if check_guard_in_bounds(next_position, bounds) is False:
             return guard_route
-        if move_counter >= 4000 and move_counter % 50 == 0:  # 4 is needed for a loop and don't need to check every time.
+        if move_counter >= 4000 and move_counter % 1000 == 0:  # 4 is needed for a loop and don't need to check every time.
             if check_for_loops(guard_route):
                 return 'Guard in a loop'
         guard_route.append(next_position)
@@ -65,9 +67,7 @@ def run_guard(guard_route, direction, obstacles, bounds):
 def find_distinct_positions(data):
     lines = [list(line) for line in data.split('\n')]
     map_of_area = np.array(lines)
-    print(map_of_area)
     bounds = map_of_area.shape
-    print(bounds)
     obstacles = []
     places_for_an_obstruction = []
     places_that_cause_loop = []
@@ -99,10 +99,8 @@ def find_distinct_positions(data):
     direction = starting_direction
     counter = 0
     guard_route = run_guard(guard_route, direction, obstacles, bounds)
-    print(len(set(guard_route)))
-    print(len(places_for_an_obstruction))
+    print(f'The number of unique locations the guard visits on their first run is {len(set(guard_route))}')
     places_for_an_obstruction = list(set(guard_route[1:]))
-    print(len(places_for_an_obstruction))
 
     for place in places_for_an_obstruction:
         obstacles.append(place)
@@ -110,15 +108,12 @@ def find_distinct_positions(data):
 
         if guard_route == 'Guard in a loop':
             places_that_cause_loop.append(place)
-        else:
-            print(len(set(guard_route)))
 
         guard_route = [starting_location]
         direction = starting_direction
         obstacles.remove(place)
         counter += 1
         print(f'Obstacle in position number {counter} of {len(places_for_an_obstruction)}')
-    print(places_that_cause_loop)
     print(f'The number of positions for the barrel is {len(places_that_cause_loop)}')
 
 
