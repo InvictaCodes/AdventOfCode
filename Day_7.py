@@ -7,7 +7,6 @@ def perform_operations(answer, numbers):
     if len(numbers) == 1:
         return numbers[0] == answer
 
-
     added = numbers[0] + numbers[1]
     multiplied = numbers[0] * numbers[1]
     concatenated = int(str(numbers[0]) + str(numbers[1]))
@@ -16,12 +15,15 @@ def perform_operations(answer, numbers):
         new_numbers = [operation] + numbers[2:]
         if perform_operations(answer, new_numbers):  # keep trying until the first if statement gets True
             return True
+
     return False
+
 
 def find_total_calibration_result(data):
     print(datetime.now())
     calibration_results = []
     lines = [list(line.split(':')) for line in data.split('\n')]  # there are 850 lines in the real data set
+
     for line in lines:
         test_value = int(line[0])
         numbers = list(map(int, line[1].split()))
