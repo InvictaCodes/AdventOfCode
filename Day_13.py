@@ -9,7 +9,7 @@ def calculate_tokens(data):
     for claw_data in data_on_claws:
         button_a, button_b, prize = claw_data[0].split(':')[1], claw_data[1].split(':')[1], claw_data[2].split(':')[1]
         button_a, button_b, prize = button_a.split(', '), button_b.split(', '), prize.split(', ')
-        button_a = int(button_a[0].split('+')[1]), int(button_a[1].split('+')[1])  # there are no minuses in the data so can get away with this
+        button_a = int(button_a[0].split('+')[1]), int(button_a[1].split('+')[1])  # There are no minuses in the data so can get away with this
         button_b = int(button_b[0].split('+')[1]), int(button_b[1].split('+')[1])
         part_1_prize = int(prize[0].split('=')[1]), int(prize[1].split('=')[1])
         part_2_prize = part_1_prize[0] + 10000000000000, part_1_prize[1] + 10000000000000
@@ -23,7 +23,7 @@ def calculate_tokens(data):
             a = (first_equation[2] - first_equation[1] * b)/first_equation[0]
             if a.is_integer() is False or b.is_integer() is False:  # We only want whole number solutions as we can't fractionally press a button
                 continue
-            cost = a*3 + b
+            cost = a * 3 + b
             if prize == part_1_prize:
                 total_cost += cost
             else:
@@ -31,9 +31,6 @@ def calculate_tokens(data):
 
     print(f'Total cost to win all prizes in the first part is {int(total_cost)} tokens')
     print(f'Total cost to win all prizes in the second part is {int(total_cost_2nd_prize)} tokens')
-
-
-
 
 
 calculate_tokens(inputs.day_13_data)
