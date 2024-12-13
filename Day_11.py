@@ -2,8 +2,7 @@ import inputs
 import numpy as np
 from collections import defaultdict
 
-
-
+total_stones = 0
 dict_of_stones = {}
 
 def first_rule(stones):  # replace zeros with ones
@@ -71,6 +70,21 @@ def count_stones(starting_stones, blinks):
     return stones, count
 
 
+def process_stone(stone, total_stones):
+    new_stones = []
+    if stone == 0:
+        new_stones.append(1)
+    elif len(str(stone)) % 2 == 0:
+        split_mark = int(len(str(stone)) / 2)
+        new_stones += [int(str(stone)[:split_mark]), int(str(stone)[split_mark:])]
+        total_stones += 1
+
+    else:
+        new_stones.append(stone * 2024)
+
+    return new_stones, total_stones
+
+
 def process_stones(stones):
     new_stones = []
     for stone in stones:
@@ -87,18 +101,21 @@ def process_stones(stones):
 
 
 def how_many_stones_after_x_blinks(starting_stones, x):
-    total_stones = 0
     starting_stones = list(map(int, starting_stones.split()))
     starting_stones = [stone for stone in starting_stones]
-    count = 0
-    stones = process_stones(starting_stones)
-    for blinks in range(x-1):
-        stones = process_stones(stones)
-    count += len(stones)
-    print(f'After {blinks} blinks, the {starting_stones} stone has morphed into {count} stones.')
-    total_stones += count
+    total_stones = len(starting_stones)
 
-    print(f'After {blinks} blinks, there are a total of {total_stones} stones.')
+    for starting_stone in starting_stones:
+        count = 0
+        stones, total_stones = process_stone(starting_stone, total_stones)
+        for blinks in range(x-1):
+            for stone in stones:
+                if type(stone) is int:
+                    stones, total_stones = process_stone(stone, total_stones)
+                    count += len(stones)
+        print(f'After {x} blinks, the {starting_stone} stone has morphed into {count} stones.')
+
+    print(f'After {x} blinks, there are a total of {total_stones} stones.')
 
     '''
         stones, count = count_stones(starting_stones, 15)
@@ -124,6 +141,6 @@ def how_many_stones_after_x_blinks(starting_stones, x):
         print(f' after {45} blinks, there are {total_stones} stones.')
         '''
 
-how_many_stones_after_x_blinks(inputs.day_11_long_example, 25)
+how_many_stones_after_x_blinks(inputs.day_11_long_example, 6)
 
 
