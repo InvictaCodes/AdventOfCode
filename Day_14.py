@@ -66,7 +66,6 @@ def calculate_safety_factor(data, time, floor_dimensions):
         print(i)
         path = create_path_for_robot(initial_positions[i], velocities[i], floor_dimensions)
         final_positions.append(find_position(path, time))
-    #print(final_positions)
 
     floor_centre = [int(floor_dimensions[0]/2), int(floor_dimensions[1]/2)]
     top_left_quadrant = [[i, j] for i in range(floor_centre[1]) for j in range(floor_centre[0])]
@@ -84,7 +83,5 @@ def calculate_safety_factor(data, time, floor_dimensions):
     print(quadrant_scores)
     print(safety_factor)
 
-
-    #for robot in final_positions:
 
 calculate_safety_factor(inputs.day_14_data, 100, (103, 101))  # (rows, columns) for floor dimensions
