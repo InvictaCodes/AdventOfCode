@@ -32,17 +32,21 @@ def check_bounds(next_position, velocity, bounds):  # position and velocity are 
 
 
 def create_path_for_robot(next_position, velocity, bounds):
-    path = [next_position]
+    path_dict = {}
+    path_dict[str(next_position)] = 0
+    path_list = [next_position]
     loop = False
+    i = 1
     while loop is False:
         next_position = [next_position[0] + velocity[0], next_position[1] + velocity[1]]
         next_position = check_bounds(next_position, velocity, bounds)
-        if next_position in path:
+        if str(next_position) in path_dict:
             loop = True
         else:
-            path.append(next_position)
+            path_list.append(next_position)
+            path_dict[str(next_position)] = i
 
-    return path
+    return path_list, path_dict
 
 
 def calculate_safety_factor(data, time, floor_dimensions):
@@ -63,9 +67,12 @@ def calculate_safety_factor(data, time, floor_dimensions):
 
     final_positions = []
     for i in range(len(initial_positions)):  # len(initial_positions)):
+        paths = []
         print(i)
-        path = create_path_for_robot(initial_positions[i], velocities[i], floor_dimensions)
-        final_positions.append(find_position(path, time))
+        path_list, path_dict = create_path_for_robot(initial_positions[i], velocities[i], floor_dimensions)
+        final_positions.append(find_position(path_list, time))
+        paths.append(path_list)
+        # save paths and then for part two just use paths to add current positions to a set - look for the shortest set.
 
     floor_centre = [int(floor_dimensions[0]/2), int(floor_dimensions[1]/2)]
     top_left_quadrant = [[i, j] for i in range(floor_centre[1]) for j in range(floor_centre[0])]
@@ -84,4 +91,4 @@ def calculate_safety_factor(data, time, floor_dimensions):
     print(safety_factor)
 
 
-calculate_safety_factor(inputs.day_14_data, 100, (103, 101))  # (rows, columns) for floor dimensions
+calculate_safety_factor(inputs.day_14_data, 50, (103, 101))  # (rows, columns) for floor dimensions
