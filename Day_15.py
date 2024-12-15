@@ -3,7 +3,7 @@ import numpy as np
 from collections import defaultdict
 
 
-def handle_crate_chain(start_position, direction, warehouse):  # all aboard the crate train!
+def handle_crate_train(start_position, direction, warehouse):  # all aboard the crate train!
 
     current_position = start_position
     crate_train = []
