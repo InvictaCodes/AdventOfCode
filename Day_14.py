@@ -1,6 +1,7 @@
 import inputs
 import re
 import numpy as np
+from collections import defaultdict
 
 
 def score_quadrant(positions, quadrant):
@@ -58,20 +59,20 @@ def calculate_safety_factor(data, time, floor_dimensions):
     initial_positions = [[int(num) for num in robot] for robot in initial_positions]
     velocities = equations[1::2]
     velocities = [[int(num) for num in robot] for robot in velocities]
-    print(f' Initial positions of robots = {initial_positions}')
-    print(f'Velocities of robots = {velocities}')
+    #print(f' Initial positions of robots = {initial_positions}')
+    #print(f'Velocities of robots = {velocities}')
 
     # create the tile floor
     tile_floor = np.zeros(floor_dimensions)
     print(tile_floor)
 
     final_positions = []
+    paths = {}
     for i in range(len(initial_positions)):  # len(initial_positions)):
-        paths = []
-        print(i)
+        # print(i)
         path_list, path_dict = create_path_for_robot(initial_positions[i], velocities[i], floor_dimensions)
         final_positions.append(find_position(path_list, time))
-        paths.append(path_list)
+        paths['robot' + str(i)] = path_list
         # save paths and then for part two just use paths to add current positions to a set - look for the shortest set.
 
     floor_centre = [int(floor_dimensions[0]/2), int(floor_dimensions[1]/2)]
@@ -88,7 +89,35 @@ def calculate_safety_factor(data, time, floor_dimensions):
     safety_factor = safety_factor * score_quadrant(final_positions, bottom_right_quadrant)
 
     print(quadrant_scores)
-    print(safety_factor)
+    print(f'The safety factor is {safety_factor}')
+
+    # Part 2: Find the frame with the minimum unique positions
+    min_unique_positions = 500  # Initial large value
+    frame_of_interest = 0
+
+    for t in range(10000):
+        frame = defaultdict(set)  # Dictionary to track positions at time `t`
+
+        # Populate the `frame` with robots' positions at time `t`
+        for robot in paths.keys():
+            if t < len(paths[robot]):  # Ensure `t` is within bounds
+                frame[str(paths[robot][t])].add(robot)  # Group robots by their position
+
+        # Calculate the number of unique positions
+        unique_positions = len(frame)  # Directly use `len(frame)` for unique keys
+
+        # Update minimum if a smaller value is found
+        if unique_positions < min_unique_positions:
+            min_unique_positions = unique_positions
+            frame_of_interest = t
+
+    # Print the result
+    print(f'Frame of interest = {frame_of_interest} with {min_unique_positions} unique positions')
+
+    print(f'at time {t} seconds the robots are in {len(list(frame.keys()))} unique positions.')
+
+    
+
 
 
 calculate_safety_factor(inputs.day_14_data, 50, (103, 101))  # (rows, columns) for floor dimensions
