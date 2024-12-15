@@ -91,7 +91,7 @@ def sum_gps_coord(data):
         elif check_move(next_position, dict_of_warehouse) is True:  # Nothing in way
             dict_of_warehouse['@'] = [next_position]
         else:  # Robot hits a crate - need to deal with sit. of that crate being pushed into another crate or wall
-            if handle_crate_chain(next_position, directions[i], dict_of_warehouse):
+            if handle_crate_train(next_position, directions[i], dict_of_warehouse):
                 dict_of_warehouse['@'] = [next_position]  # Robot can push crate(s)
             else:
                 dict_of_warehouse['@'] = [current_position]  # End of crate train hits wall, nothing can move.
